@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { MoreHorizontal } from "lucide-react";
 
-import { EntryRowMenu } from "@/features/ledger/components/EntryRowMenu";
+import { EntryDetailSheet } from "@/features/ledger/components/EntryDetailSheet";
 import { EntryEditDialog } from "@/features/list/components/EntryEditDialog";
 import { useEntryEdit } from "@/features/list/hooks/useEntryEdit";
 import { useEntryList } from "@/features/list/hooks/useEntryList";
+import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { ConfirmDialog } from "@/shared/components/ConfirmDialog";
 import { formatCurrency, formatDateTime } from "@/shared/lib/format";
@@ -28,6 +30,7 @@ export function EntryTable({
 }: EntryTableProps) {
   const { searchQuery, filteredEntries, setSearchQuery } = useEntryList(entries);
   const edit = useEntryEdit({ onSuccess: onRefresh });
+  const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
   const [deletingEntry, setDeletingEntry] = useState<Entry | null>(null);
 
   if (isLoading) {
@@ -73,11 +76,16 @@ export function EntryTable({
                     {formatDateTime(entry.created_at)}
                   </td>
                   <td className="py-4 text-right">
-                    <EntryRowMenu
-                      entry={entry}
-                      onEdit={edit.openEdit}
-                      onDelete={setDeletingEntry}
-                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      className="text-muted-foreground hover:text-foreground"
+                      aria-label={`${entry.guest_name} 상세 보기`}
+                      onClick={() => setSelectedEntry(entry)}
+                    >
+                      <MoreHorizontal />
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -85,6 +93,14 @@ export function EntryTable({
           </table>
         </div>
       )}
+
+      <EntryDetailSheet
+        entry={selectedEntry}
+        open={Boolean(selectedEntry)}
+        onClose={() => setSelectedEntry(null)}
+        onEdit={edit.openEdit}
+        onDelete={setDeletingEntry}
+      />
 
       <EntryEditDialog
         open={Boolean(edit.editingEntry)}
