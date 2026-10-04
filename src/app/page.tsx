@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { LedgerPage } from "@/features/ledger/components/LedgerPage";
 
 export default function HomePage() {
-  redirect("/entry");
+  return <LedgerPage />;
 }

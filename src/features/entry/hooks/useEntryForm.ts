@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { AMOUNT_PRESETS } from "@/shared/lib/constants";
 
 type UseEntryFormOptions = {
-  onSuccess: () => Promise<void>;
+  onSuccess: (guestName: string, amount: number) => Promise<void>;
 };
 
 type UseEntryFormResult = {
@@ -63,8 +63,10 @@ export function useEntryForm({ onSuccess }: UseEntryFormOptions): UseEntryFormRe
         throw new Error(data.error ?? "저장에 실패했습니다.");
       }
 
+      const savedName = guestName.trim();
+      const savedAmount = Number(amount);
       reset();
-      await onSuccess();
+      await onSuccess(savedName, savedAmount);
       return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "저장에 실패했습니다.");

@@ -41,7 +41,7 @@ export function EntryEditDialog({
 }: EntryEditDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-heading text-xl">축의금 수정</DialogTitle>
         </DialogHeader>

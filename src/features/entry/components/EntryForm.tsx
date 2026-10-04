@@ -8,7 +8,7 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import { formatCurrency } from "@/shared/lib/format";
 
 type EntryFormProps = {
-  onSuccess: () => Promise<void>;
+  onSuccess: (guestName: string, amount: number) => Promise<void>;
 };
 
 export function EntryForm({ onSuccess }: EntryFormProps) {
@@ -42,7 +42,7 @@ export function EntryForm({ onSuccess }: EntryFormProps) {
           onChange={(event) => setGuestName(event.target.value)}
           placeholder="하객 이름"
           autoComplete="off"
-          className="h-12 text-base"
+          className="h-10"
         />
       </div>
 
@@ -67,7 +67,7 @@ export function EntryForm({ onSuccess }: EntryFormProps) {
           value={amount}
           onChange={(event) => setAmount(event.target.value.replace(/[^\d]/g, ""))}
           placeholder="직접 입력"
-          className="h-12 text-base"
+          className="h-10"
         />
         {amount ? (
           <p className="text-sm text-muted-foreground">
@@ -84,13 +84,13 @@ export function EntryForm({ onSuccess }: EntryFormProps) {
           onChange={(event) => setMemo(event.target.value)}
           placeholder="동행, 대리 전달 등 (선택)"
           rows={3}
-          className="resize-none text-base"
+          className="resize-none"
         />
       </div>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-      <Button type="submit" size="lg" className="h-12 w-full text-base" disabled={isSubmitting}>
+      <Button type="submit" className="h-10 w-full" disabled={isSubmitting}>
         {isSubmitting ? "저장 중..." : "저장하기"}
       </Button>
     </form>
