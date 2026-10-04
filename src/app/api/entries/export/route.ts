@@ -18,7 +18,7 @@ export async function GET() {
     }
 
     const rows = (data ?? []).map((entry) => ({
-      이름: entry.guest_name,
+      성함: entry.guest_name,
       금액: entry.amount,
       메모: entry.memo ?? "",
       입력일시: formatDateTime(entry.created_at),

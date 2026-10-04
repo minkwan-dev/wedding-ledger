@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { AMOUNT_PRESETS } from "@/shared/lib/constants";
+import { createEntrySchema } from "@/shared/lib/schemas/entry";
 
 type UseEntryFormOptions = {
   onSuccess: (guestName: string, amount: number) => Promise<void>;
@@ -19,7 +20,8 @@ type UseEntryFormResult = {
   setAmount: (value: string) => void;
   setMemo: (value: string) => void;
   selectPreset: (value: number) => void;
-  submit: () => Promise<boolean>;
+  requestConfirm: () => boolean;
+  confirmSubmit: () => Promise<boolean>;
   reset: () => void;
 };
 
@@ -42,7 +44,32 @@ export function useEntryForm({ onSuccess }: UseEntryFormOptions): UseEntryFormRe
     setError(null);
   }, []);
 
-  const submit = useCallback(async () => {
+  const validate = useCallback(() => {
+    const parsed = createEntrySchema.safeParse({
+      guest_name: guestName,
+      amount: Number(amount),
+      memo: memo.trim() ? memo : null,
+    });
+
+    if (!parsed.success) {
+      return parsed.error.issues[0]?.message ?? "입력값이 올바르지 않습니다.";
+    }
+
+    return null;
+  }, [amount, guestName, memo]);
+
+  const requestConfirm = useCallback(() => {
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return false;
+    }
+
+    setError(null);
+    return true;
+  }, [validate]);
+
+  const confirmSubmit = useCallback(async () => {
     setIsSubmitting(true);
     setError(null);
 
@@ -51,7 +78,7 @@ export function useEntryForm({ onSuccess }: UseEntryFormOptions): UseEntryFormRe
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          guest_name: guestName,
+          guest_name: guestName.trim(),
           amount: Number(amount),
           memo: memo.trim() ? memo : null,
         }),
@@ -87,7 +114,8 @@ export function useEntryForm({ onSuccess }: UseEntryFormOptions): UseEntryFormRe
     setAmount,
     setMemo,
     selectPreset,
-    submit,
+    requestConfirm,
+    confirmSubmit,
     reset,
   };
 }

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
+import { EntryRowMenu } from "@/features/ledger/components/EntryRowMenu";
 import { EntryEditDialog } from "@/features/list/components/EntryEditDialog";
 import { useEntryEdit } from "@/features/list/hooks/useEntryEdit";
 import { useEntryList } from "@/features/list/hooks/useEntryList";
-import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { ConfirmDialog } from "@/shared/components/ConfirmDialog";
 import { formatCurrency, formatDateTime } from "@/shared/lib/format";
@@ -44,7 +44,7 @@ export function EntryTable({
         <Input
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="이름으로 검색"
+          placeholder="성함으로 검색"
           className="max-w-xs"
         />
       </div>
@@ -55,14 +55,13 @@ export function EntryTable({
         </p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+          <table className="w-full min-w-[480px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-border/80 text-muted-foreground">
-                <th className="pb-3 pr-4 font-medium">이름</th>
+                <th className="pb-3 pr-4 font-medium">성함</th>
                 <th className="pb-3 pr-4 font-medium">금액</th>
-                <th className="pb-3 pr-4 font-medium">메모</th>
                 <th className="pb-3 pr-4 font-medium">입력일시</th>
-                <th className="pb-3 text-right font-medium">관리</th>
+                <th className="pb-3 text-right font-medium" aria-label="관리" />
               </tr>
             </thead>
             <tbody>
@@ -70,31 +69,15 @@ export function EntryTable({
                 <tr key={entry.id} className="border-b border-border/50 last:border-0">
                   <td className="py-4 pr-4 font-medium">{entry.guest_name}</td>
                   <td className="py-4 pr-4">{formatCurrency(entry.amount)}</td>
-                  <td className="max-w-[200px] truncate py-4 pr-4 text-muted-foreground">
-                    {entry.memo ?? "—"}
-                  </td>
                   <td className="py-4 pr-4 text-muted-foreground">
                     {formatDateTime(entry.created_at)}
                   </td>
                   <td className="py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => edit.openEdit(entry)}
-                      >
-                        수정
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setDeletingEntry(entry)}
-                      >
-                        삭제
-                      </Button>
-                    </div>
+                    <EntryRowMenu
+                      entry={entry}
+                      onEdit={edit.openEdit}
+                      onDelete={setDeletingEntry}
+                    />
                   </td>
                 </tr>
               ))}

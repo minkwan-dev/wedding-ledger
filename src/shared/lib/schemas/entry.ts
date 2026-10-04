@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createEntrySchema = z.object({
-  guest_name: z.string().trim().min(1, "이름을 입력해 주세요.").max(50),
+  guest_name: z.string().trim().min(1, "성함을 입력해 주세요.").max(50),
   amount: z.number().int().positive("금액은 1원 이상이어야 합니다."),
   memo: z.string().trim().max(200).nullable().optional(),
 });

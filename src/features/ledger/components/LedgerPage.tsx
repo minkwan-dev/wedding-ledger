@@ -7,13 +7,7 @@ import { useLedgerPage } from "@/features/ledger/hooks/useLedgerPage";
 import { AppShell } from "@/shared/components/AppShell";
 import { NoticeDialog } from "@/shared/components/NoticeDialog";
 import { Button } from "@/shared/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 
 export function LedgerPage() {
   const {
@@ -30,15 +24,10 @@ export function LedgerPage() {
 
   return (
     <AppShell>
-      <header className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-2">
-          <h1 className="font-heading text-3xl font-medium tracking-tight lg:text-4xl">
-            축의금 관리
-          </h1>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            입력과 조회를 한 화면에서 처리하세요.
-          </p>
-        </div>
+      <header className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="font-heading text-3xl font-medium tracking-tight lg:text-4xl">
+          축의금 관리
+        </h1>
         <Button
           type="button"
           variant="outline"
@@ -55,11 +44,10 @@ export function LedgerPage() {
 
       <LedgerStatsBar entries={entries} />
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[380px_1fr] lg:gap-12">
-        <Card className="h-fit ring-0 border border-border/80 shadow-none">
+      <div className="mt-10 grid gap-8 lg:grid-cols-2 lg:gap-10">
+        <Card className="h-fit border border-border/80 shadow-none ring-0">
           <CardHeader>
             <CardTitle className="font-heading text-xl">축의금 입력</CardTitle>
-            <CardDescription>이름, 금액, 메모를 입력하고 저장하세요.</CardDescription>
           </CardHeader>
           <CardContent>
             <EntryForm onSuccess={handleEntrySuccess} />
@@ -67,12 +55,7 @@ export function LedgerPage() {
         </Card>
 
         <section>
-          <div className="mb-6">
-            <h2 className="font-heading text-xl font-medium">입력 목록</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              저장된 축의금을 검색하고 수정할 수 있습니다.
-            </p>
-          </div>
+          <h2 className="mb-6 font-heading text-xl font-medium">입력 목록</h2>
           <EntryTable
             entries={entries}
             isLoading={isLoading}

@@ -48,7 +48,7 @@ export function EntryEditDialog({
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="edit-guest-name">이름</Label>
+            <Label htmlFor="edit-guest-name">성함</Label>
             <Input
               id="edit-guest-name"
               value={guestName}
