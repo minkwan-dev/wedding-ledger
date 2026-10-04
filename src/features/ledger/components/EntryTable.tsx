@@ -49,15 +49,42 @@ export function EntryTable({
     return <p className="py-12 text-center text-sm text-destructive">{error}</p>;
   }
 
+  const showPagination = filteredEntries.length > 0 && totalPages > 1;
+
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between gap-4">
         <Input
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           placeholder="성함으로 검색"
           className="max-w-xs"
         />
+        {showPagination ? (
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              이전
+            </Button>
+            <span className="min-w-16 text-center text-sm tabular-nums text-muted-foreground">
+              {currentPage} / {totalPages}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              다음
+            </Button>
+          </div>
+        ) : null}
       </div>
 
       {filteredEntries.length === 0 ? (
@@ -101,37 +128,6 @@ export function EntryTable({
           </table>
         </div>
       )}
-
-      {filteredEntries.length > 0 && totalPages > 1 ? (
-        <div className="mt-6 flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            전체 {filteredEntries.length}건
-          </p>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              이전
-            </Button>
-            <span className="min-w-16 text-center text-sm tabular-nums text-muted-foreground">
-              {currentPage} / {totalPages}
-            </span>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              다음
-            </Button>
-          </div>
-        </div>
-      ) : null}
 
       <EntryDetailSheet
         entry={selectedEntry}
