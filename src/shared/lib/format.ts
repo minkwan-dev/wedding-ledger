@@ -11,3 +11,8 @@ export function formatDateTime(iso: string): string {
     minute: "2-digit",
   });
 }
+
+export function maskCurrency(amount: number): string {
+  const digits = String(amount).length;
+  return `${"•".repeat(Math.max(digits, 4))}원`;
+}

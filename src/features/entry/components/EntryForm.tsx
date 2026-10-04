@@ -93,7 +93,7 @@ export function EntryForm({ onSuccess }: EntryFormProps) {
             id="memo"
             value={memo}
             onChange={(event) => setMemo(event.target.value)}
-            placeholder="동행, 대리 전달 등 (선택)"
+            placeholder="동행, 대리 전달 등"
             rows={3}
             className="resize-none"
           />
