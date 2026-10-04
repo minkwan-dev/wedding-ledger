@@ -28,7 +28,15 @@ export function EntryTable({
   onRefresh,
   onNotice,
 }: EntryTableProps) {
-  const { searchQuery, filteredEntries, setSearchQuery } = useEntryList(entries);
+  const {
+    searchQuery,
+    filteredEntries,
+    paginatedEntries,
+    currentPage,
+    totalPages,
+    setSearchQuery,
+    setCurrentPage,
+  } = useEntryList(entries);
   const edit = useEntryEdit({ onSuccess: onRefresh });
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
   const [deletingEntry, setDeletingEntry] = useState<Entry | null>(null);
@@ -68,7 +76,7 @@ export function EntryTable({
               </tr>
             </thead>
             <tbody>
-              {filteredEntries.map((entry) => (
+              {paginatedEntries.map((entry) => (
                 <tr key={entry.id} className="border-b border-border/50 last:border-0">
                   <td className="py-4 pr-4 font-medium">{entry.guest_name}</td>
                   <td className="py-4 pr-4">{formatCurrency(entry.amount)}</td>
@@ -93,6 +101,37 @@ export function EntryTable({
           </table>
         </div>
       )}
+
+      {filteredEntries.length > 0 && totalPages > 1 ? (
+        <div className="mt-6 flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            전체 {filteredEntries.length}건
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              이전
+            </Button>
+            <span className="min-w-16 text-center text-sm tabular-nums text-muted-foreground">
+              {currentPage} / {totalPages}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              다음
+            </Button>
+          </div>
+        </div>
+      ) : null}
 
       <EntryDetailSheet
         entry={selectedEntry}
