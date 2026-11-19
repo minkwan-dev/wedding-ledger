@@ -1,19 +1,16 @@
 import { NextResponse } from "next/server";
 
-import { createEntrySchema } from "@/shared/lib/schemas/entry";
+import { createEntrySchema, type Entry } from "@/shared/lib/schemas/entry";
+import { fetchAllActiveEntries } from "@/shared/lib/supabase/entries";
 import { createServerSupabase } from "@/shared/lib/supabase/server";
 
 export async function GET() {
   try {
     const supabase = createServerSupabase();
-    const { data, error } = await supabase
-      .from("entries")
-      .select("*")
-      .is("deleted_at", null)
-      .order("created_at", { ascending: false });
+    const { data, error } = await fetchAllActiveEntries<Entry>(supabase, "*", false);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error }, { status: 500 });
     }
 
     return NextResponse.json(data);
@@ -44,6 +41,8 @@ export async function POST(request: Request) {
         guest_name: parsed.data.guest_name,
         amount: parsed.data.amount,
         memo: parsed.data.memo?.trim() || null,
+        side: parsed.data.side,
+        relation: parsed.data.relation ?? null,
       })
       .select("*")
       .single();
