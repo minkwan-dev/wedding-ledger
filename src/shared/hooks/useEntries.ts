@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 import type { Entry } from "@/shared/lib/schemas/entry";
 
@@ -9,6 +9,7 @@ type UseEntriesResult = {
   isLoading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
+  setEntries: Dispatch<SetStateAction<Entry[]>>;
 };
 
 export function useEntries(): UseEntriesResult {
@@ -16,12 +17,12 @@ export function useEntries(): UseEntriesResult {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 최초 로딩만 스켈레톤을 보여주고, 이후 갱신은 조용히 반영한다.
   const refetch = useCallback(async () => {
-    setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/entries");
+      const response = await fetch("/api/entries", { cache: "no-store" });
       const data = await response.json();
 
       if (!response.ok) {
@@ -37,8 +38,17 @@ export function useEntries(): UseEntriesResult {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 초기 데이터 로드
     void refetch();
   }, [refetch]);
 
-  return { entries, isLoading, error, refetch };
+  useEffect(() => {
+    const onFocus = () => {
+      if (document.visibilityState === "visible") void refetch();
+    };
+    document.addEventListener("visibilitychange", onFocus);
+    return () => document.removeEventListener("visibilitychange", onFocus);
+  }, [refetch]);
+
+  return { entries, isLoading, error, refetch, setEntries };
 }

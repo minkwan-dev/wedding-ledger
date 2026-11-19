@@ -27,12 +27,14 @@ export async function PATCH(request: Request, context: RouteContext) {
         guest_name: parsed.data.guest_name,
         amount: parsed.data.amount,
         memo: parsed.data.memo?.trim() || null,
+        side: parsed.data.side,
+        relation: parsed.data.relation ?? null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
       .is("deleted_at", null)
       .select("*")
-      .single();
+      .maybeSingle();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -64,7 +66,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
       .eq("id", id)
       .is("deleted_at", null)
       .select("*")
-      .single();
+      .maybeSingle();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

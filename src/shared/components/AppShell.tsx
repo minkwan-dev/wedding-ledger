@@ -6,7 +6,7 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="mx-auto min-h-full w-full max-w-[1200px] px-6 py-10 lg:px-10 lg:py-12">
+    <div className="mx-auto min-h-full w-full max-w-[1160px] px-4 pt-8 pb-24 sm:px-6 lg:px-10 lg:pt-12">
       {children}
     </div>
   );
